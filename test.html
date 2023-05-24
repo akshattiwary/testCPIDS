@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>Security Logs</title>
+  </head>
+  <body>
+      <header>
+      </header>
+      <section>
+      </section>
+    <script>
+    async function populate() {
+      const requestURL = 'https://hcids.us3.hana.ondemand.com/DSoD/security_admin/get_log?pageNum=1&selected_event_type_id=0&event_time_period_id=2&event_user_name_filter=&event_object_name_filter=&timezoneid=null&startTimeHour=1&startTimeMin=1&startTimeAmPm=0&startTimeYear=2023&startTimeMonth=5&startTimeDate=16&endTimeHour=12&endTimeMin=59&endTimeAmPm=1&endTimeYear=2023&endTimeMonth=5&endTimeDate=23&_=1684869239003';
+		const myHeaders = new Headers();
+		myHeaders.append("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
+		myHeaders.append("Accept-Encoding", "gzip, deflate, br");
+		myHeaders.append("Accept-Language", "en-US,en;q=0.5");
+		myHeaders.append("Cookie", "JSESSIONID=B966D2D7F7E8F0FEC0A57BC54ABB3CAB0C7020E3BED548B0B8C0E58497F719ED; BIGipServerhcids.factoryus3.customdomain=!wiVZBUSAY7IbozIZ6HvnNzx6diFQkfISkM8n5Ee+P8tKZylxf8lmcP9wQIpW5kGOZlQzPK6Tlj4Iuow=");
+		myHeaders.append("Connection", "keep-alive");
+		myHeaders.append("Host", "hcids.us3.hana.ondemand.com");
+		myHeaders.append("Sec-Fetch-Dest", "document");
+		myHeaders.append("Sec-Fetch-Mode", "navigate");
+		myHeaders.append("Sec-Fetch-Site", "none");
+		myHeaders.append("Sec-Fetch-User", "?1");
+		myHeaders.append("Upgrade-Insecure-Requests", "1");
+		myHeaders.append("Connection", "keep");
+		myHeaders.append("Access-Control-Allow-Origin","*");
+		myHeaders.append("User-Agent","Mozilla/5.0 Gecko/20100101 Firefox/113.0");
+	
+		const myInit = {
+		  method: "GET",
+		  headers: myHeaders,
+		  mode: "cors",
+		  cache: "default",
+		};      
+		
+	  request = new Request(requestURL, myInit);
+      const response = await fetch(request);
+      const securityLogText = await response.text();
+      const securityLog = JSON.parse(securityLogText);
+      populateHeader(securityLog);
+      populateLines(securityLog);
+    }
+    function populateHeader(obj) {
+      const header = document.querySelector('header');
+      const myH1 = document.createElement('h1');
+      myH1.textContent = obj.totalPage;
+      header.appendChild(myH1);
+    }
+    function populateLines(obj) {
+      const section = document.querySelector('section');
+      const lines = obj.logItems;
+	  const table = document.createElement('table');
+
+      for (const line of lines) {
+        const tr = document.createElement('tr');
+        const detail = document.createElement('td');
+        const eventDuration = document.createElement('td');
+        const eventSubType = document.createElement('td');
+        const id = document.createElement('td');
+        const logDate = document.createElement('td');
+        const messageKey = document.createElement('td');
+        const operatorId = document.createElement('td');
+        const operatorName = document.createElement('td');
+        const orgId = document.createElement('td');
+        const schemaEnv = document.createElement('td');
+        const statusId = document.createElement('td');
+        
+		detail.textContent = line.detail;
+		eventDuration.textContent = line.eventDuration;
+		eventSubType.textContent = line.eventSubType;
+		id.textContent = line.id;
+		logDate.textContent = line.logDate;
+		messageKey.textContent = line.messageKey;
+		operatorId.textContent = line.operatorId;
+		operatorName.textContent = line.operatorName;
+		orgId.textContent = line.orgId;
+		schemaEnv.textContent = line.schemaEnv;
+		statusId.textContent = line.statusId;
+       
+        tr.appendChild(detail);
+        tr.appendChild(eventDuration);
+        tr.appendChild(eventSubType);
+        tr.appendChild(id);
+        tr.appendChild(logDate);
+        tr.appendChild(messageKey);
+        tr.appendChild(operatorId);
+        tr.appendChild(operatorName);
+        tr.appendChild(orgId);
+        tr.appendChild(schemaEnv);
+        tr.appendChild(statusId);
+
+		table.appendChild(tr);        
+      }
+	  section.appendChild(table);
+    }
+    populate();
+    </script>
+  </body>
+</html>
